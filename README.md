@@ -252,7 +252,7 @@ http://angularjs.blogspot.com/2016/12/ok-let-me-explain-its-going-to-be.html
     * Specify the service as a dependency
     * Use a constructor parameter
     * Service is injected when component is instantiated
-    
+
 # Modules
 
 ## ES 2015 Modules
@@ -692,6 +692,8 @@ Use the `@Output` operator to pass data back to a Component's container using ev
 
 # Services and Dependency Injection
 
+## Services 
+
 A `Service` is a class with a focused purpose.
 
 Used for features that:
@@ -702,7 +704,7 @@ Used for features that:
 
 If you register the service with Angular, it will maintain a singleton that can be used throughout the application through Dependency Injection (DI).
 
-*Dependency Injection*
+## Dependency Injection
 
 DI is a coding pattern in which a class receives the instances of objects it needs (called dependencies) from an external source rather than creating them itself. In Angular, the external source is the Angular injector.
 
@@ -723,7 +725,11 @@ Note: It is recommended to always decorate services with the `@Injectable()` dec
       }
     }
 
-* To register a service, you must register a `Provider`
+## Registering a Service
+
+To Register a Service:
+
+* You must register a `Provider`
   * Code that can create or return a service
   * Typically the service class itself
 * Define in component or Angular module metadata
