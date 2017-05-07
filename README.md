@@ -28,6 +28,8 @@ http://angularjs.blogspot.com/2016/12/ok-let-me-explain-its-going-to-be.html
 
 *Array Filter Function (MDN)*: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
 
+*Rx Marbles*: http://rxmarbles.com
+
 # Why AngularJS
 
 * Expressive HTML
@@ -252,6 +254,24 @@ http://angularjs.blogspot.com/2016/12/ok-let-me-explain-its-going-to-be.html
     * Specify the service as a dependency
     * Use a constructor parameter
     * Service is injected when component is instantiated
+
+* Http
+  * Setup
+    * Add HttpModule to the imports array of one of the application's Angular Modules
+  * Service
+    * Import what we need
+    * Define dependency for the http client service
+      * Use a constructor parameter
+    * Create a method for each http request
+    * Call the desired http method, such as get
+      * Pass in the URL for the desired endpoint
+    * Map the Http response to a JSON object
+    * Add error handling
+  * Subscribing
+    * Call `subscribe` method of the returned observable
+    * Provide a function to handle an emitted item
+      * Normally assigns a property to the returned JSON object
+    * Provide an error function to handle any returned errors
 
 # Modules
 
@@ -737,3 +757,120 @@ To Register a Service:
   * Injectable to component AND its children
 * Registered in root Angular module
   * Injectable everywhere in the application
+
+# Retrieving Data Using HTTP
+
+## Observables and Reactive Extensions
+
+* Observables
+  * Observables help us manage asynchronous data
+  * Treat events as a collection
+    * An array whose items arrive asynchronously over time
+  * Are a proposed feature of the next version of JavaScript
+  * Use Reactive Extensions (RxJS) to use them now
+  * Are used within Angular
+  * Support Observable Operators
+    * Methods on observables that compose new observables
+    * Transform the source observable in some way
+    * Process each value as it is emitted
+    * Examples: map, filter, take, merge
+
+### Promises vs. Observables
+
+    Promise                         Observable
+    ------------------------------  --------------------------------------------------
+    Provides a single future value  Emits multiple values over time
+    Not lazy                        Lazy - will not emit values until subscribed to
+    Not cancellable                 Cancellable
+                                    Supports map, filter, reduce and similar operators
+
+## Sending an HTTP Request
+
+    // In Service
+    ...
+
+    import { Http, Response } from '@angular/http';
+    import { Observable } from 'rxjs/Observable';
+    import 'rxjs/add/operator/map';
+
+    ...
+
+    @Injectable()
+    export class ProductService {
+      private _productUrl = 'www.mywebservice.com/api/products';
+
+      constructor(private _http: Http) {
+      }
+
+      getProducts(): Observable<IProduct[]> {
+        return this._http.get(this._productUrl)
+                   .map((response: Response) => <IProduct[]>response.json());
+      }
+    }
+
+    // In AppModule
+    ...
+    import { HttpModule } from '@angular/http';
+
+    @NgModule({
+      imports: [
+        ...
+        HttpModule
+      ]
+      ...
+    })
+
+## Exception Handling
+
+Use `.catch` to catch errors. You can also use the `.do` operator to do extra things (like logging to the console);
+
+    ...
+    import 'rxjs/add/operator/do';
+    import 'rxjs/add/operator/catch';
+    ...
+
+    get products(): Observable<IProduct[]> {
+      return this._http.get(this._productUrl)
+                 .map((response: Response) => <IProduct[]>response.json())
+                 .do(data => console.log('All: ' + JSON.stringify(data)))
+                 .catch(this.handleError);
+    }
+
+    private handleError(error: Response) {
+      ...
+    }
+
+## Subscribing to an Observable
+
+    x.then(valueFn, errorFn)                              // Promise
+    x.subscribe(valueFn, errorFn)                         // Observable
+    x.subscribe(valueFn, errorFn, completeFn)             // Observable; completeFn is rarely used
+    let sub = x.subscribe(valueFn, errorFn, completeFn)   // to hold the subscription for later unsubscribe
+
+    // Example
+    ngOnInit(): void {
+      this._productService.getProducts()
+        .subscribe(
+          products => this.products = products,
+          error => this.errorMessage = <any>error);
+    }
+
+# Navigation and Routing Basics
+
+## How Routing Works
+
+An Angular application is a Single Page Application (SPA).
+
+* Configure a route for each component
+* Define options/actions
+* Tie a route to each option/action
+* Activate the route based on user action
+* Activating a route displays the component's view
+* Angular uses HTML5-style routes by default that don't require the hash symbol
+* Hash-style routing can be configured instead of HTML5-style routing
+
+## Configuring Routes
+
+## Tying Routes to Actions
+
+## Placing the Views
