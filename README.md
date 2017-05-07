@@ -273,6 +273,69 @@ http://angularjs.blogspot.com/2016/12/ok-let-me-explain-its-going-to-be.html
       * Normally assigns a property to the returned JSON object
     * Provide an error function to handle any returned errors
 
+* Routing
+  * Displaying Components
+    * Nest-able Components
+      * Requires a selector
+      * Nest in another component
+      * Does not need a route
+    * Routed components
+      * No selector
+      * Configure the routes
+      * Tie routes to actions
+  * Doing Routing
+    * Configure route definitions
+      * Define the base element in index.html
+      * Import RouterModule into AppModule
+        * Add each route (RouterModule.forRoot)
+        * Order matters
+      * Route definitions require
+        * `path`
+          * No leading slash
+          * `''` for default route
+          * `'**'` for wildcard route
+        * `component`
+          * Not a string
+          * Not enclosed in quotes
+    * Tie routes to actions
+      * Add RouterLink directive as an attribute
+        * Clickable element
+        * Enclose in square brackets
+      * Bind to a link parameters array
+        * First element is the path
+        * All other elements are route parameters
+    * Place the view
+      * Add RouterOutlet directive
+        * Identify where to display the routed component's view
+        * Specified in the host component's template
+  * Passing Parameters
+    * Add param to route configuration path
+      * `{ path: 'product/:id', component: ProductDetailComponent }`
+    * Add param to router link
+      * `<a [routerLink]="['/product', product.productId]">{{product.productName}}</a>`
+    * Import the `ActivatedRoute` service into the component
+      * `import { ActivatedRoute } from '@angular/router';`
+    * Add the `ActivatedRoute` service to the component constructor
+      * `constructor(private _route: ActivatedRoute) { }`
+    * Read out the route parameter
+      * `console.log(this._route.snapshot.params['id']);`
+      * The parameter name must match the one in the route definition (i.e. 'id')
+  * Activate a Route with Code
+    * Use the Router service
+      * Import the service
+      * Define it as a dependency
+    * Create a method that calls the navigate method of the Router service
+      * Pass in the link parameters array
+    * Add a user interface element
+      * Use event binding to bind to the created method
+  * Route Guards
+    * Build a Guard service
+      * Implement the guard type (i.e. CanActivate)
+      * Create the method (canActivate())
+    * Register the guard service provider
+      * Must be registered in a Module (not a component)
+    * Add the guard to the desired route
+
 # Modules
 
 ## ES 2015 Modules
@@ -871,6 +934,140 @@ An Angular application is a Single Page Application (SPA).
 
 ## Configuring Routes
 
+Routing is component based.
+
+An Angular application has one router, registered in the AppModule.
+
+    ...
+    import { RouterModule } from '@angular/router';
+
+    @NgModule({
+      imports: [
+        BrowserModule,
+        FormsModule,
+        HttpModule,
+        RouterModule.forRoot([])    // Configure routes here
+      ],
+      declarations: [
+        ...
+      ],
+      bootstrap: [
+        AppComponent
+      ]
+    })
+    export class AppModule { }
+
+Append the 'useHash' config option to specify hash-style routing.
+
+    RouterModule.forRoot([], {useHash: true})
+
+Specify route definitions with Route objects.
+
+    [
+      {path: 'products', component: ProductListComponent},
+      {path: 'products/:id', component: ProductDetailComponent},
+      {path: 'welcome', component: WelcomeComponent},
+      {path: '', redirectTo: 'welcome, pathMatch: 'full'},
+      {path: '**', component: PageNotFoundComponent}
+    ]
+
+Notes:
+
+* No leading slashes
+* Order of routes matters
+
 ## Tying Routes to Actions
 
+Navigating the Application Routes
+
+* Menu option, link, image or button that activates a route     // we need to handle this
+* typing the URL in the address bar / bookmark                  // this just works
+* The browser's forward or back buttons                         // this just works
+* Add the `[routerLink]` directive to navigable links
+  * `<a [routerLink]="['/welcome']">Home</a></li>`
+  * `<a [routerLink]="['/products']">Product List</a></li>` 
+
 ## Placing the Views
+
+When a route is activated, the corresponding component's view is displayed in the `<router-outlet></router-outlet>` directive.
+
+# Navigation and Routing Additional Techniques
+
+## Passing Parameters to a Route
+
+* Configure the route with parameters
+  * `{path: 'product/:id', component: ProductDetailComponent}`
+* Configure the links with parameters
+  * `<a [routerLink]="['/product', product.productId]">{{product.productName}}</a>`
+* Add `ActivatedRoute` import to component
+  * `import { ActivatedRoute } from '@angular/router';`
+* Add `_route` to component constructor
+  * `constructor(private _route: ActivatedRoute) {`
+* Retrieve route params during construction
+  * Use `snapshot` if you only need the initial value on construction
+    * `console.log(this._route.snapshot.params['id']);`
+  * Use observable approach if you need to subscribe to changes
+
+## Activating a Route with Code
+
+To route with code:
+
+* Use the `Router` service from `@angular/router`.
+* Add the Router service to the constructor
+  * `constructor(private _router: Router) { }`
+* Activate the route
+  * `onBack(): void { this._router.navigate(['/products']); }`
+
+## Protecting a Route with Guards
+
+### Use guards to limit access to a route.
+
+* CanActivate
+  * Guard navigation to a route
+* CanDeactivate
+  * Guard navigation from a route
+* Resolve
+  * Pre-fetch data before activating a route
+* CanLoad
+  * Prevent asynchronous routing
+
+### Building a Guard
+
+    import { Injectable } from '@angular/core';
+    import { CanActivate } from @angular/router;
+
+    @Injectable()
+    export class ProductDetailGuard implements CanActivate {
+      canActivate(): boolean {    // you can return an observable or promise from here also
+        ...
+      }
+    }
+
+### Registering a Guard
+
+Guards must be provided at the root Angular Module level.
+
+    ...
+    import { ProductDetailGuard } from './products/product-guard.service';
+
+    @NgModule({
+      imports: [...],
+      declarations: [...],
+      providers: [ ProductDetailGuard ],
+      bootstrap: [ AppComponent ]
+    })
+    export class AppModule { }
+
+### Using a Guard
+
+Add the Guard to a route.
+
+    RouterModule.forRoot([
+      { path: 'products', component: ProductListComponent },
+      { path: 'products/:id',
+        canActivate: [ ProductDetailGuard ],
+        component: ProductDetailComponent },
+    ])
+
+# Angular Modules
+
