@@ -20,7 +20,7 @@ http://angularjs.blogspot.com/2016/12/ok-let-me-explain-its-going-to-be.html
 
 *Angular Quick Start*: https://angular.io/docs/ts/latest/quickstart.html
 
-*AngularCli*: https://github.com/angular/angular-cli
+*AngularCLI*: https://cli.angular.io
 
 *Angular Library Packages*: https://www.npmjs.com/~angular
 
@@ -1200,3 +1200,42 @@ To refactor the root application routes into their own module:
     export class AppRoutingModule { };
 
 Something similar can be done for feature modules.
+
+# Angular Setup Revisited
+
+* TypeScript Configuration File
+  * `tsconfig.json` specifies TypeScript compile options and settings
+* TypeScript Definitions File
+  * `.d.ts` files specify type definitions for 3rd party modules
+  * `typings.json` specifies registry dependencies for typings
+* npm Package File
+  * `package.json` specifies properties about the application, scripts, dependencies and dev-dependencies
+* SystemJS Configuration File
+  * `systemjs.config.js` specifies SystemJS configuration settings
+* index.html File Scripts
+
+## Bootstrapping Process Revisited
+
+Use either JIT (just in time) compiling or AOT (ahead of time) compiling.
+
+    // in main.ts, with JIT compiling
+    import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+    import { AppModule } from './app.module';
+    platformBrowserDynamic().bootstrapModule(AppModule);
+
+    // in main.ts, after AOT compiling
+    import { platformBrowser } from '@angular/platform-browser';
+    import { AppModuleNgFactory } from './app.module.ngfactory';
+    platformBrowser().bootstrapModuleFactory(AppModuleFactory);
+
+## Angular CLI
+
+The Angular CLI is a command line interface for Angular.
+
+`ng new Application` will create a working Angular application with all required starter files.
+
+`ng g component component-name` will create a new component in the application.
+
+Can also generate unit and e2e tests.
+
+See the [AngularCLI](https://cli.angular.io) site for more information.
