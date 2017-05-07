@@ -112,6 +112,37 @@ http://angularjs.blogspot.com/2016/12/ok-let-me-explain-its-going-to-be.html
       * Module Path
         * Enclose in quotes
         * Correct spelling/casing
+  * Encapsulating Styles in a Component
+    * `styles` property of decorator
+      * Specify an array of style strings
+    * `styleUrls` property
+      * Specify an array of stylesheet paths
+  * Lifecycle Hooks
+    * `import` the lifecycle hook interface
+    * `implement` the lifecycle hook interface
+    * Write the code for the lifecycle hook method
+  * Nested Components
+    * `@Input` decorator for arguments passed from container to nested component
+      * Attached to a property of any type
+      * Prefix with `@`
+      * Suffix with `()`
+    * `@Output` decorator for data passed from the nested component to a container
+      * Attached to a property declared as an EventEmitter
+      * Use the generic argument to define the event payload type
+      * Use the `new` keyword to create an instance of EventEmitter
+      * Prefix with `@`
+      * Suffix with `()`
+  * Container Component
+    * Use the directive
+      * The Directive name is nested component's selector
+    * Use property bindings to pass data to the nested component
+    * Use event binding to respond to events from the nested component
+      * Use `$event` to access the event payload passed from the nested component
+  * Relative Paths with Module ID
+    * Set the moduleId property of the component decorator to module.id
+    * Change the URLs to a component relative path
+      * `templateUrl` property
+      * `styleUrls` property
 
 * Templates
   * Use inline template
@@ -160,13 +191,6 @@ http://angularjs.blogspot.com/2016/12/ok-let-me-explain-its-going-to-be.html
     * Add to imports array of Module (probably AppModule)
       * `imports: [BrowserModule, FormsModule],`
 
-* Pipes
-  * Pipe Character: `|`
-  * Pipe Name
-  * Pipe Parameters
-    * Separate with colons
-      * `{{ product.price | currency: 'USD':true:'1.2-2' }}`
-
 * Interfaces
   * Defines custom types
   * Promotes strong typing
@@ -176,59 +200,29 @@ http://angularjs.blogspot.com/2016/12/ok-let-me-explain-its-going-to-be.html
   * Implementing
     * `implements` keyword and interface name
     * Write code for each property and method required by the interface
-
-* Encapsulating Styles in Component
-  * `styles` property of decorator
-    * Specify an array of style strings
-  * `styleUrls` property
-    * Specify an array of stylesheet paths
-
-* Lifecycle Hooks
-  * `import` the lifecycle hook interface
-  * `implement` the lifecycle hook interface
-  * Write the code for the lifecycle hook method
-
-* Custom Pipes
-  * Building Custom Pipe
-    * `import` Pipe and PipeTransform
-    * Create a class that implements the PipeTransform
-      * `export` the class
-    * Write code for the Transform method
-    * Decorate the class with the `Pipe` decorator
-  * Using a Custom Pipe
-    * `import` the custom pipe
-    * Add the pipe to the declarations array of an Angular module
-    * Any template associated with a component that is also declared in that Angular module can use the Pipe
-    * Use the pipe in the template
-      * Pipe character
-        * `|`
-      * Pipe name
-      * Pipe arguments (separated by colons)
-
-* Relative Paths with Module ID
-  * Set the moduleId property of the component decorator to module.id
-  * Change the URLs to a component relative path
-    * `templateUrl` property
-    * `styleUrls` property
-
-* Nested Components
-  * `@Input` decorator for arguments passed from container to nested component
-    * Attached to a property of any type
-    * Prefix with `@`
-    * Suffix with `()`
-  * `@Output` decorator for data passed from the nested component to a container
-    * Attached to a property declared as an EventEmitter
-    * Use the generic argument to define the event payload type
-    * Use the `new` keyword to create an instance of EventEmitter
-    * Prefix with `@`
-    * Suffix with `()`
-
-* Container Component
-  * Use the directive
-    * The Directive name is nested component's selector
-  * Use property bindings to pass data to the nested component
-  * Use event binding to respond to events from the nested component
-    * Use `$event` to access the event payload passed from the nested component
+    
+* Pipes
+  * Pipe Character: `|`
+  * Pipe Name
+  * Pipe Parameters
+    * Separate with colons
+      * `{{ product.price | currency: 'USD':true:'1.2-2' }}`
+  * Custom Pipes
+    * Building Custom Pipe
+      * `import` Pipe and PipeTransform
+      * Create a class that implements the PipeTransform
+        * `export` the class
+      * Write code for the Transform method
+      * Decorate the class with the `Pipe` decorator
+    * Using a Custom Pipe
+      * `import` the custom pipe
+      * Add the pipe to the declarations array of an Angular module
+      * Any template associated with a component that is also declared in that Angular module can use the Pipe
+      * Use the pipe in the template
+        * Pipe character
+          * `|`
+        * Pipe name
+        * Pipe arguments (separated by colons)
 
 * Services
   * Service class
@@ -335,6 +329,35 @@ http://angularjs.blogspot.com/2016/12/ok-let-me-explain-its-going-to-be.html
     * Register the guard service provider
       * Must be registered in a Module (not a component)
     * Add the guard to the desired route
+
+* Module Structure
+  * Every application must have a root application Module
+    * `AppModule` by convention
+  * Every application must have a root application component
+    * `AppComponent` by convention
+    * `AppModule` will bootstrap `AppComponent`
+  * Define separate Angular modules for each feature
+    * Enforces separation of concerns
+    * Helps keep `AppModule` from getting too large
+  * Create shared modules (`SharedModule`) for components, directives and pipes you want to share
+    * Primarily use the `exports` and `declarations` array
+  * Create core modules (`CoreModule`) for services you want to ensure are loaded on application start
+    * Ensure that core modules are imported only once in `AppModule`
+    * Primarily have `providers`, none of which are exported
+  * Create routing modules for routes
+  * Decorate modules with `NgModule` metadata
+    * Includes:
+      * Bootstrap array
+        * Startup components
+      * Declarations array
+        * Components, directives and pipes that belong to the module
+      * Exports array
+        * Components, directives and pipes that an importing module can use
+      * Imports array
+        * Components, directives and pipes used by the module
+      * Providers array
+        * Service providers
+        * Angular registers each provider with Angular's root application injector
 
 # Modules
 
@@ -1071,3 +1094,109 @@ Add the Guard to a route.
 
 # Angular Modules
 
+## What is an Angular Module
+
+* A class with an NgModule decorator
+* It's purpose:
+  * Organize the pieces of our app
+  * Arrange them into blocks
+  * Extend our application with capabilities from external libraries
+  * Provide a template resolution environment
+  * Aggregate and re-export
+* An Angular Module:
+  * Declares all components, directives, and pipes within our application
+  * Bootstraps the initial component of our app
+  * Can export components, directives and pipes to other modules
+  * Can import other modules, bringing in exported functionality from those other modules
+  * Can register service providers with the Angular Injector
+  * Defines the components, directives and pipes available to the components that belong to the module
+
+## Angular Module Metadata
+
+* All Angular applications have one root AppModule and one root AppComponent
+* The root AppComponent is used for bootstrapping
+
+### Bootstrap Array
+
+* Every application must bootstrap at least one component, the root application component
+* The bootstrap array should only be used in the root application module, AppModule
+
+### Declarations Array
+
+* Used to define components, directives and pipes that belong to the module
+* Only declare components, directives and pipes
+* Every component, directive and pipe we create must belong to one and only one Angular module
+* Never re-declare declare components, directives and pipes that belong to another module
+* All declared components, directives and pipes are private by default
+  * They are only accessible to other components, directives and pipes declared in the same module
+* The Angular module provides the template resolution environment for its component templates
+
+### Exports Array
+
+* Lets us share components, directives and pipes with other modules
+* Lets us re-export other system libraries and modules
+* Lets us re-export 3rd party modules
+* Lets us re-export our own modules
+* Export any components, directives and pipes needed by other components
+* Re-export modules to re-export their components, directives and pipes
+* We can re-export something without importing it first
+* *Never* export a service
+
+### Imports Array
+* Lets us import supporting modules that export components, directives and pipes
+* Importing a module makes available any exported components, directives and pipes from that module
+* Only import what this module needs
+* Imports *are not* inherited.
+  * Importing a module *does not* provide access to the exports of its imported modules
+  * Unless the modules re-exports its imported modules
+
+### Providers Array
+* Lets us register service providers at the module level
+* Any service provider added to the providers array is registered at the root of the application
+* Don't add services to the providers array of a shared module
+  * This will cause multiple instances of the service
+  * Consider building a CoreModule for services and import it once in the AppModule
+* Routing Guards must be added to the providers array of an Angular module
+
+## Creating a Feature Module
+
+* Define a new feature module
+* Add the appropriate components to the declarations array of the feature module
+* Don't import BrowserModule if you need `*ngFor` and `*ngIf` in a feature module
+  * Import the CommonModule instead
+* Add related services as Providers
+* Import the feature module into the root AppModule
+
+## Defining a Shared Module
+
+The purpose of a shared module is to organize a set of commonly used pieces into one module and export those pieces for use by any module that imports the shared module. This lets us aggregate our external components and external modules into a convenience module.
+
+Note: we can export something without importing it first.
+
+## Revisiting AppModule
+
+Every application has a root Angular Module called, by convention, `AppModule`. Its purpose is to orchestrate the application as a whole.
+
+To refactor the root application routes into their own module:
+
+    // in app-routing.module.ts
+    import { NgModule } from '@angular/core';
+    import { RouterModule } from '@angular/router';
+
+    import { WelcomeModule } from './home/welcome.component';
+
+    @NgModule({
+      imports: [
+        RouterModule.forRoot([
+          { path: 'welcome', component: WelcomeComponent },
+          { path: '', redirectTo: 'welcome', pathMatch, 'full' },
+          { path: '**', redirectTo: 'welcome', pathMatch, 'full' }
+        ])
+      ],
+      exports: [
+        RouterModule
+      ]
+    })
+    export class AppRoutingModule { };
+
+Something similar can be done for feature modules.
