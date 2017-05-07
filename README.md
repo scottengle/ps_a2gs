@@ -12,17 +12,19 @@ http://angularjs.blogspot.com/2016/12/ok-let-me-explain-its-going-to-be.html
 
 # External Resources
 
-*Course Blog Site*: http://blogs.msmvps.com/deborahk/angular-2-getting-started-problem-solver
-
-*GitHub Repo*: https://github.com/DeborahK/Angular2-GettingStarted
-
-*TypeScript Playground*: http://www.typescriptlang.org/Playground/
+*Angular Documentation*: https://angular.io/
 
 *Angular Quick Start*: https://angular.io/docs/ts/latest/quickstart.html
 
 *AngularCLI*: https://cli.angular.io
 
 *Angular Library Packages*: https://www.npmjs.com/~angular
+
+*Course Blog Site*: http://blogs.msmvps.com/deborahk/angular-2-getting-started-problem-solver
+
+*GitHub Repo*: https://github.com/DeborahK/Angular2-GettingStarted
+
+*TypeScript Playground*: http://www.typescriptlang.org/Playground/
 
 *Standard HTML Element Events (MDN)*: https://developer.mozilla.org/en-US/docs/Web/Events
 
@@ -43,6 +45,24 @@ http://angularjs.blogspot.com/2016/12/ok-let-me-explain-its-going-to-be.html
 * Modern
 * Simplified API
 * Enhances Productivity
+
+# Angular Is...
+
+* A JavaScript Framework for building client-side applications using HTML, CSS and JavaScript
+* A platform supporting
+  * Multiple languages
+    * ES5, TypeScript
+  * Multiple templating syntaxes
+    * HTML, XML
+  * Multiple rendering targets
+    * DOM, native
+* Mobile Web
+  * Material Design
+  * Angular Universal
+  * Web Workers
+* Native Mobiles Apps
+  * Ionic
+  * Native Script
 
 # Anatomy of an Angular Application
 
