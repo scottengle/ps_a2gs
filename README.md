@@ -63,6 +63,8 @@ http://angularjs.blogspot.com/2016/12/ok-let-me-explain-its-going-to-be.html
 
 # Running the Sample Application
 
+Code available at https://github.com/DeborahK/Angular2-GettingStarted
+
     npm i
     npm start
 
@@ -1223,7 +1225,7 @@ Use either JIT (just in time) compiling or AOT (ahead of time) compiling.
     import { AppModule } from './app.module';
     platformBrowserDynamic().bootstrapModule(AppModule);
 
-    // in main.ts, after AOT compiling
+    // in main.ts, with AOT compiling
     import { platformBrowser } from '@angular/platform-browser';
     import { AppModuleNgFactory } from './app.module.ngfactory';
     platformBrowser().bootstrapModuleFactory(AppModuleFactory);
